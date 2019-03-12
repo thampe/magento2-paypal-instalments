@@ -25,7 +25,7 @@ namespace Iways\PayPalInstalments\Model;
  * @package    Iways_PaypalInstalments
  * @author robert
  */
-class Config extends \Magento\PayPal\Model\Config
+class Config extends \Magento\Paypal\Model\Config
 {
 
     /**

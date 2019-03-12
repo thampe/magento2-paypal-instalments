@@ -19,7 +19,7 @@ namespace Iways\PayPalInstalments\Model;
  *
  * @package Iways\PayPalInstalments\Model
  */
-class Payment extends \Magento\PayPal\Model\Express
+class Payment extends \Magento\Paypal\Model\Express
 {
     const CODE = 'iways_paypalinstalments_payment';
 

@@ -14,13 +14,35 @@
  */
 define(
     [
+        'jquery',
         'Magento_Checkout/js/view/payment/default',
+        'Magento_Paypal/js/action/set-payment-method',
+        'Magento_Checkout/js/model/payment/additional-validators',
+        'Magento_Checkout/js/model/quote',
+        'Magento_Customer/js/customer-data'
     ],
-    function (Component) {
+    function ($, Component, setPaymentMethodAction, additionalValidators, quote, customerData) {
         return Component.extend({
             defaults: {
                 template: 'Iways_PayPalInstalments/payment',
             },
+            /** Redirect to paypal */
+            continueToPayPal: function () {
+                if (additionalValidators.validate()) {
+                    //update payment method information if additional data was changed
+                    this.selectPaymentMethod();
+                    setPaymentMethodAction(this.messageContainer).done(
+                        function () {
+                            customerData.invalidate(['cart']);
+                            $.mage.redirect(
+                                window.checkoutConfig.payment.iways_paypalinstalments_payment.redirectUrl
+                            );
+                        }
+                    );
+
+                    return false;
+                }
+            }
         });
     }
 );

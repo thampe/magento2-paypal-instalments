@@ -48,7 +48,9 @@ class ConfigProvider implements ConfigProviderInterface
     {
         return $this->method->isAvailable() ? [
             'payment' => [
-                'iways_paypalinstalments_payment' => [],
+                'iways_paypalinstalments_payment' => [
+                    'redirectUrl' => $this->method->getCheckoutRedirectUrl()
+                ],
             ],
         ] : [];
     }

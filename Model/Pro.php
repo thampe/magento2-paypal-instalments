@@ -25,7 +25,7 @@ namespace Iways\PayPalInstalments\Model;
  * @package    Iways_PaypalInstalments
  * @author robert
  */
-class Pro extends \Magento\PayPal\Model\Pro
+class Pro extends \Magento\Paypal\Model\Pro
 {
     /**
      * API model type

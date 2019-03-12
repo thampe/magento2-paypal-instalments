@@ -4,7 +4,7 @@ namespace Iways\PayPalInstalments\Model;
 /**
  * Factory class for @see \Iways\PayPalInstalments\Model\Pro
  */
-class ProFactory extends \Magento\PayPal\Model\ProFactory
+class ProFactory extends \Magento\Paypal\Model\ProFactory
 {
     /**
      * Object Manager instance
