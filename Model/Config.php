@@ -39,7 +39,7 @@ class Config extends \Magento\PayPal\Model\Config
         'paypal_direct'    => 'DP',
         'paypaluk_express' => 'EC',
         'paypaluk_direct'  => 'DP',
-        'iways_paypalinstalments' => 'EC'
+        'iways_paypalinstalments_payment' => 'EC'
     );
 
     /**

@@ -18,6 +18,8 @@
  *
  */
 namespace Iways\PayPalInstalments\Model\Api;
+use Iways\PayPalInstalments\Model\Cart;
+
 /**
  * Iways PayPalInstalments Model Api Nvp
  *
@@ -198,11 +200,11 @@ class Nvp extends \Magento\Paypal\Model\Api\Nvp
      * Line items export mapping settings
      * @var array
      */
-    protected $_lineItemTotalExportMap = array(
-        \Magento\Paypal\Model\Cart::TOTAL_SUBTOTAL => 'ITEMAMT',
-        \Magento\Paypal\Model\Cart::TOTAL_TAX      => 'TAXAMT',
-        \Magento\Paypal\Model\Cart::TOTAL_SHIPPING => 'SHIPPINGAMT',
-    );
+    protected $_lineItemTotalExportMap = [
+        Cart::AMOUNT_SUBTOTAL => 'ITEMAMT',
+        Cart::AMOUNT_TAX => 'TAXAMT',
+        Cart::AMOUNT_SHIPPING => 'SHIPPINGAMT',
+    ];
     /**
      * Return Paypal Api version
      *

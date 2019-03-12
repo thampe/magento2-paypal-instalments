@@ -6,7 +6,7 @@
  */
 namespace Iways\PayPalInstalments\Controller\Instalments;
 
-class Start extends \Magento\Paypal\Controller\Express\Start
+class Cancel extends \Magento\Paypal\Controller\Express\Cancel
 {
     /**
      * Config mode type

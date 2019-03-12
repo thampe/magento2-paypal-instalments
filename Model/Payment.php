@@ -30,12 +30,75 @@ class Payment extends \Magento\PayPal\Model\Express
      *
      * @var $_proType string
      */
-    protected $_proType = 'iways_paypalinstalments/pro';
+    protected $_proType = Pro::class;
     /**
      * Payment Method features
      * @var bool
      */
     protected $_canManageRecurringProfiles = false;
+
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data $paymentData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Payment\Model\Method\Logger $logger
+     * @param ProFactory $proFactory
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\UrlInterface $urlBuilder
+     * @param CartFactory $cartFactory
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Framework\Exception\LocalizedExceptionFactory $exception
+     * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
+     * @param Transaction\BuilderInterface $transactionBuilder
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
+     * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(
+        \Magento\Framework\Model\Context $context,
+        \Magento\Framework\Registry $registry,
+        \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory,
+        \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory,
+        \Magento\Payment\Helper\Data $paymentData,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Payment\Model\Method\Logger $logger,
+        ProFactory $proFactory,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\UrlInterface $urlBuilder,
+        \Magento\Paypal\Model\CartFactory $cartFactory,
+        \Magento\Checkout\Model\Session $checkoutSession,
+        \Magento\Framework\Exception\LocalizedExceptionFactory $exception,
+        \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
+        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
+        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
+        parent::__construct(
+            $context,
+            $registry,
+            $extensionFactory,
+            $customAttributeFactory,
+            $paymentData,
+            $scopeConfig,
+            $logger,
+            $proFactory,
+            $storeManager,
+            $urlBuilder,
+            $cartFactory,
+            $checkoutSession,
+            $exception,
+            $transactionRepository,
+            $transactionBuilder,
+            $resource,
+            $resourceCollection,
+            $data
+        );
+    }
 
     /**
      * Checkout redirect URL getter for onepage checkout (hardcode)
