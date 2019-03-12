@@ -1,0 +1,55 @@
+<?php
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * Author Robert Hillebrand - hillebrand@i-ways.de - i-ways sales solutions GmbH
+ * Copyright i-ways sales solutions GmbH © 2015. All Rights Reserved.
+ * License http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
+
+namespace Iways\PayPalInstalments\Model;
+
+use Magento\Checkout\Model\ConfigProviderInterface;
+use Magento\Framework\Escaper;
+use Magento\Payment\Helper\Data as PaymentHelper;
+use Psr\Log\LoggerInterface;
+
+class ConfigProvider implements ConfigProviderInterface
+{
+    /**
+     * @var string[]
+     */
+    protected $methodCode = Payment::CODE;
+
+    /**
+     * @var Checkmo
+     */
+    protected $method;
+
+    /**
+     * ConfigProvider constructor.
+     * @param PaymentHelper $paymentHelper
+     */
+    public function __construct(
+        PaymentHelper $paymentHelper
+    ) {
+        $this->method = $paymentHelper->getMethodInstance($this->methodCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfig()
+    {
+        return $this->method->isAvailable() ? [
+            'payment' => [
+                'iways_paypalinstalments_payment' => [],
+            ],
+        ] : [];
+    }
+}
