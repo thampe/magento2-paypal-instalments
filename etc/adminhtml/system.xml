@@ -38,16 +38,26 @@
                     <frontend_model>Iways\PayPalInstalments\Block\Config\System\Config\Form\Comment</frontend_model>
                 </field>
                 <group id="iways_paypalinstalments_api" translate="label" showInDefault="1" showInWebsite="1" sortOrder="10">
-                    <comment><![CDATA[<a href="https://www.paypalobjects.com/webstatic/de_DE/downloads/PayPal_Nutzung_der_REST_API.pdf" target="_blank">How to retrieve your PayPal API credentials.</a>]]></comment>
                     <label>PayPalInstalments Api Settings</label>
                     <attribute type="expanded">1</attribute>
                     <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
-                    <field id="client_id" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="business_account" extends="payment_all_paypal/express_checkout/express_checkout_required/express_checkout_required_express_checkout/business_account"/>
+                    <field id="api_authentication" extends="payment_all_paypal/express_checkout/express_checkout_required/express_checkout_required_express_checkout/api_authentication"/>
+                    <field id="api_username" extends="payment_all_paypal/express_checkout/express_checkout_required/express_checkout_required_express_checkout/api_username" />
+                    <field id="api_password" extends="payment_all_paypal/express_checkout/express_checkout_required/express_checkout_required_express_checkout/api_password" />
+                    <field id="api_signature" extends="payment_all_paypal/express_checkout/express_checkout_required/express_checkout_required_express_checkout/api_signature" />
+                    <field id="api_cert" extends="payment_all_paypal/express_checkout/express_checkout_required/express_checkout_required_express_checkout/api_cert" />
+                    <field id="api_wizard" extends="payment_all_paypal/express_checkout/express_checkout_required/express_checkout_required_express_checkout/api_wizard" />
+                    <field id="sandbox_flag" extends="payment_all_paypal/express_checkout/express_checkout_required/express_checkout_required_express_checkout/sandbox_flag" />
+                    <field id="use_proxy" extends="payment_all_paypal/express_checkout/express_checkout_required/express_checkout_required_express_checkout/use_proxy" />
+                    <field id="proxy_host" extends="payment_all_paypal/express_checkout/express_checkout_required/express_checkout_required_express_checkout/proxy_host" />
+                    <field id="proxy_port" extends="payment_all_paypal/express_checkout/express_checkout_required/express_checkout_required_express_checkout/proxy_port" />
+                    <field id="client_id" translate="label" type="obscure" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Client ID</label>
                         <config_path>iways_paypalinstalments/api/client_id</config_path>
                         <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     </field>
-                    <field id="client_secret" translate="label" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="client_secret" translate="label" type="obscure" sortOrder="600" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Client Secret</label>
                         <config_path>iways_paypalinstalments/api/client_secret</config_path>
                         <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
@@ -71,6 +81,12 @@
                         <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
                         <can_be_empty>1</can_be_empty>
                         <config_path>payment/iways_paypalinstalments_payment/specificcountry</config_path>
+                    </field>
+                    <field id="payment_action" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Payment from Specific Countries</label>
+                        <source_model>Iways\PayPalInstalments\Model\System\Config\Source\PaymentActions</source_model>
+                        <can_be_empty>1</can_be_empty>
+                        <config_path>payment/iways_paypalinstalments_payment/payment_action</config_path>
                     </field>
                 </group>
             </group>

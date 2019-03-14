@@ -28,4 +28,37 @@ class Start extends \Magento\Paypal\Controller\Express\Start
      * @var string
      */
     protected $_checkoutType = \Iways\PayPalInstalments\Model\Express\Checkout::class;
+
+    /**
+     * Start Express Checkout by requesting initial token and dispatching customer to PayPal
+     *
+     * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function execute()
+    {
+        try {
+            $token = $this->getToken();
+            if ($token === null) {
+                return;
+            }
+
+            $url = $this->_checkout->getRedirectUrl();
+            if ($token && $url) {
+                $this->_initToken($token);
+                $this->getResponse()->setRedirect($url);
+
+                return;
+            }
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            $this->messageManager->addExceptionMessage($e, $e->getMessage());
+        } catch (\Exception $e) {
+            $this->messageManager->addExceptionMessage(
+                $e,
+                __('We can\'t start Instalment.')
+            );
+        }
+
+        $this->_redirect('checkout/cart');
+    }
 }

@@ -29,20 +29,6 @@ class Config extends \Magento\Paypal\Model\Config
 {
 
     /**
-     * Instructions for generating proper BN code
-     *
-     * @var array
-     */
-    protected $_buildNotationPPMap = array(
-        'paypal_standard'  => 'WPS',
-        'paypal_express'   => 'EC',
-        'paypal_direct'    => 'DP',
-        'paypaluk_express' => 'EC',
-        'paypaluk_direct'  => 'DP',
-        'iways_paypalinstalments_payment' => 'EC'
-    );
-
-    /**
      * PayPal Instalments
      * @var string
      */
@@ -112,7 +98,6 @@ class Config extends \Magento\Paypal\Model\Config
             case 'payment_action':
             case 'debug':
             case 'line_items_summary':
-            case 'sandbox_flag':
             case 'min_order_total':
             case 'line_items_enabled':
             case 'allowspecific':
@@ -166,7 +151,7 @@ class Config extends \Magento\Paypal\Model\Config
     public function getPaypalUrl(array $params = array())
     {
         return sprintf('https://www.%spaypal.com/checkoutnow/2%s',
-            $this->sandboxFlag ? 'sandbox.' : '',
+            $this->getValue('sandboxFlag') ? 'sandbox.' : '',
             $params ? '?' . http_build_query($params) : ''
         );
     }
@@ -196,11 +181,7 @@ class Config extends \Magento\Paypal\Model\Config
      */
     public function isOrderReviewStepDisabled()
     {
-        return $this->_scopeConfig->getValue(
-            self::XML_PATH_PAYPAL_EXPRESS_SKIP_ORDER_REVIEW_STEP_FLAG,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-            $this->_storeId
-        );
+        return false;
     }
 
     /**
