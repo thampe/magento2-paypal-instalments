@@ -96,12 +96,10 @@ class Config extends \Magento\Paypal\Model\Config
             case 'active':
             case 'title':
             case 'payment_action':
-            case 'debug':
-            case 'line_items_summary':
             case 'min_order_total':
-            case 'line_items_enabled':
             case 'allowspecific':
             case 'specificcountry':
+            case 'line_items_enabled':
             case 'client_id':
             case 'client_secret':
                 return 'payment/' . self::METHOD_INSTALMENTS . "/{$fieldName}";
@@ -190,5 +188,19 @@ class Config extends \Magento\Paypal\Model\Config
     public function getBuildNotationCode()
     {
         return self::BN_CODE;
+    }
+
+    /**
+     * Payment actions source getter
+     *
+     * @return array
+     */
+    public function getPaymentActions()
+    {
+        $paymentActions = [
+            self::PAYMENT_ACTION_ORDER => __('Order'),
+            self::PAYMENT_ACTION_SALE => __('Sale'),
+        ];
+        return $paymentActions;
     }
 }

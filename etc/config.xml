@@ -33,7 +33,8 @@
                 <allowspecific>0</allowspecific>
                 <sort_order>-1</sort_order>
                 <group>paypal</group>
-                <min_order_total>100</min_order_total>
+                <min_order_total>99</min_order_total>
+                <line_items_enabled>1</line_items_enabled>
             </iways_paypalinstalments_payment>
         </payment>
     </default>

@@ -142,49 +142,6 @@ class Nvp extends \Magento\Paypal\Model\Api\Nvp
     ];
 
     /**
-     * SetExpressCheckout request map
-     *
-     * @var string[]
-     */
-    protected $_setExpressCheckoutRequest = [
-        'PAYMENTACTION',
-        'AMT',
-        'CURRENCYCODE',
-        'RETURNURL',
-        'CANCELURL',
-        'INVNUM',
-        'SOLUTIONTYPE',
-        'NOSHIPPING',
-        'GIROPAYCANCELURL',
-        'GIROPAYSUCCESSURL',
-        'BANKTXNPENDINGURL',
-        'PAGESTYLE',
-        'HDRIMG',
-        'HDRBORDERCOLOR',
-        'HDRBACKCOLOR',
-        'PAYFLOWCOLOR',
-        'LOCALECODE',
-        'BILLINGTYPE',
-        'SUBJECT',
-        'ITEMAMT',
-        'SHIPPINGAMT',
-        'TAXAMT',
-        'REQBILLINGADDRESS',
-        'USERSELECTEDFUNDINGSOURCE',
-        'LANDINGPAGE'
-    ];
-
-    /**
-     * DoExpressCheckoutPayment request/response map
-     * @var array
-     */
-    protected $_doExpressCheckoutPaymentRequest = array(
-        'TOKEN', 'PAYERID', 'PAYMENTACTION', 'AMT', 'CURRENCYCODE', 'IPADDRESS', 'BUTTONSOURCE', 'NOTIFYURL',
-        'RETURNFMFDETAILS', 'SUBJECT', 'ITEMAMT', 'SHIPPINGAMT', 'TAXAMT',
-    );
-
-
-    /**
      * Payment information response specifically to be collected after some requests
      * @var array
      */
@@ -196,15 +153,6 @@ class Nvp extends \Magento\Paypal\Model\Api\Nvp
     );
 
     /**
-     * Line items export mapping settings
-     * @var array
-     */
-    protected $_lineItemTotalExportMap = [
-        Cart::AMOUNT_SUBTOTAL => 'ITEMAMT',
-        Cart::AMOUNT_TAX => 'TAXAMT',
-        Cart::AMOUNT_SHIPPING => 'SHIPPINGAMT',
-    ];
-    /**
      * Return Paypal Api version
      *
      * @return string
@@ -213,27 +161,6 @@ class Nvp extends \Magento\Paypal\Model\Api\Nvp
     {
         return '124.0';
     }
-
-    /**
-     * Filter callback for preparing internal amounts to NVP request
-     *
-     * @var array
-     */
-    protected $_exportToRequestFilters = [
-        'AMT' => 'formatPrice',
-        'ITEMAMT' => 'formatPrice',
-        'TRIALAMT' => 'formatPrice',
-        'SHIPPINGAMT' => 'formatPrice',
-        'TAXAMT' => 'formatPrice',
-        'INITAMT' => 'formatPrice',
-        'CREDITCARDTYPE' => '_filterCcType',
-        'AUTOBILLAMT' => '_filterBillFailedLater',
-        'BILLINGPERIOD' => '_filterPeriodUnit',
-        'TRIALBILLINGPERIOD' => '_filterPeriodUnit',
-        'FAILEDINITAMTACTION' => '_filterInitialAmountMayFail',
-        'BILLINGAGREEMENTSTATUS' => '_filterBillingAgreementStatus',
-        'NOSHIPPING' => '_filterInt',
-    ];
 
     /**
      * SetExpressCheckout call
@@ -248,7 +175,6 @@ class Nvp extends \Magento\Paypal\Model\Api\Nvp
         $this->_prepareExpressCheckoutCallRequest($this->_setExpressCheckoutRequest);
         $request = $this->_exportToRequest($this->_setExpressCheckoutRequest);
         $this->_exportLineItems($request);
-
         // import/suppress shipping address, if any
         $options = $this->getShippingOptions();
         if ($this->getAddress()) {
