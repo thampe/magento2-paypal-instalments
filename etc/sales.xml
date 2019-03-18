@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Sales:etc/sales.xsd">
+    <section name="quote">
+        <group name="totals">
+            <item name="instalments_fee_amt" instance="Iways\PayPalInstalments\Model\Quote\Address\Total\Fee" sort_order="260"/>
+        </group>
+    </section>
+    <section name="order_invoice">
+        <group name="totals">
+            <item name="instalments_fee_amt" instance="Iways\PayPalInstalments\Model\Order\Invoice\Total\Fee" sort_order="210"/>
+        </group>
+    </section>
+    <section name="order_creditmemo">
+        <group name="totals">
+            <item name="instalments_fee_amt" instance="Iways\PayPalInstalments\Model\Order\Creditmemo\Total\Fee" sort_order="260"/>
+        </group>
+    </section>
+</config>

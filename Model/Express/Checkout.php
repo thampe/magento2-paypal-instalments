@@ -36,7 +36,7 @@ use Magento\Framework\DataObject;
  */
 class Checkout extends \Magento\Paypal\Model\Express\Checkout
 {
-    const INSTALMENTS_FEE_AMT = 'instalments_fee_amt';
+    const INSTALMENTS_FEE = 'instalments_fee_amt';
     const INSTALMENTS_TOTAL_COST = 'instalments_total_cost';
     const INSTALMENTS_MONTHLY_PAYMENT = 'instalments_monthly_payment';
     const INSTALMENTS_IS_FINANCING = 'instalments_is_financing';
@@ -157,46 +157,47 @@ class Checkout extends \Magento\Paypal\Model\Express\Checkout
 
     /**
      * Update quote when returned from PayPal
-     * rewrite billing address by paypal
-     * save old billing address for new customer
+     *
+     * Rewrite billing address by paypal, save old billing address for new customer, and
      * export shipping address in case address absence
-     * add instalment information to payment additional information
      *
      * @param string $token
+     * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function returnFromPaypal($token)
     {
-        $this->_getApi();
-        $this->_api->setToken($token)
+        $this->_getApi()
+            ->setToken($token)
             ->callGetExpressCheckoutDetails();
         $quote = $this->_quote;
 
-        $this->_ignoreAddressValidation();
+        $this->ignoreAddressValidation();
+
+        // check if we came from the Express Checkout button
+        $isButton = (bool)$quote->getPayment()->getAdditionalInformation(self::PAYMENT_INFO_BUTTON);
 
         // import shipping address
-        $exportedShippingAddress = $this->_api->getExportedShippingAddress();
+        $exportedShippingAddress = $this->_getApi()->getExportedShippingAddress();
         if (!$quote->getIsVirtual()) {
             $shippingAddress = $quote->getShippingAddress();
             if ($shippingAddress) {
-                if ($exportedShippingAddress) {
+                if ($exportedShippingAddress && $isButton) {
                     $this->_setExportedAddressData($shippingAddress, $exportedShippingAddress);
-
-                    if ($quote->getPayment()->getAdditionalInformation(self::PAYMENT_INFO_BUTTON) == 1) {
-                        // PayPal doesn't provide detailed shipping info: prefix, middlename, lastname, suffix
-                        $shippingAddress->setPrefix(null);
-                        $shippingAddress->setMiddlename(null);
-                        $shippingAddress->setLastname(null);
-                        $shippingAddress->setSuffix(null);
-                    }
-
+                    // PayPal doesn't provide detailed shipping info: prefix, middlename, lastname, suffix
+                    $shippingAddress->setPrefix(null);
+                    $shippingAddress->setMiddlename(null);
+                    $shippingAddress->setLastname(null);
+                    $shippingAddress->setSuffix(null);
                     $shippingAddress->setCollectShippingRates(true);
                     $shippingAddress->setSameAsBilling(0);
                 }
 
                 // import shipping method
                 $code = '';
-                if ($this->_api->getShippingRateCode()) {
-                    if ($code = $this->_matchShippingMethodCode($shippingAddress, $this->_api->getShippingRateCode())) {
+                if ($this->_getApi()->getShippingRateCode()) {
+                    $code = $this->_matchShippingMethodCode($shippingAddress, $this->_getApi()->getShippingRateCode());
+                    if ($code) {
                         // possible bug of double collecting rates :-/
                         $shippingAddress->setShippingMethod($code)->setCollectShippingRates(true);
                     }
@@ -209,32 +210,38 @@ class Checkout extends \Magento\Paypal\Model\Express\Checkout
         }
 
         // import billing address
-        $portBillingFromShipping = $quote->getPayment()->getAdditionalInformation(self::PAYMENT_INFO_BUTTON) == 1
-            && $this->_config->requireBillingAddress != \Magento\Paypal\Model\Config::REQUIRE_BILLING_ADDRESS_ALL
-            && !$quote->isVirtual();
-        if ($portBillingFromShipping) {
+        $requireBillingAddress = (int)$this->_config->getValue(
+                'requireBillingAddress'
+            ) === \Magento\Paypal\Model\Config::REQUIRE_BILLING_ADDRESS_ALL;
+
+        if ($isButton && !$requireBillingAddress && !$quote->isVirtual()) {
             $billingAddress = clone $shippingAddress;
-            $billingAddress->unsAddressId()
-                ->unsAddressType();
+            $billingAddress->unsAddressId()->unsAddressType()->setCustomerAddressId(null);
             $data = $billingAddress->getData();
             $data['save_in_address_book'] = 0;
             $quote->getBillingAddress()->addData($data);
             $quote->getShippingAddress()->setSameAsBilling(1);
         } else {
-            $billingAddress = $quote->getBillingAddress();
+            $billingAddress = $quote->getBillingAddress()->setCustomerAddressId(null);
         }
-        $exportedBillingAddress = $this->_api->getExportedBillingAddress();
-        $this->_setExportedAddressData($billingAddress, $exportedBillingAddress);
-        $billingAddress->setCustomerNotes($exportedBillingAddress->getData('note'));
+        $exportedBillingAddress = $this->_getApi()->getExportedBillingAddress();
+
+        // Since country is required field for billing and shipping address,
+        // we consider the address information to be empty if country is empty.
+        $isEmptyAddress = ($billingAddress->getCountryId() === null);
+
+        if ($requireBillingAddress || $isEmptyAddress) {
+            $this->_setExportedAddressData($billingAddress, $exportedBillingAddress);
+        }
+        $billingAddress->setCustomerNote($exportedBillingAddress->getData('note'));
         $quote->setBillingAddress($billingAddress);
-        $quote->setInstalmentsFeeAmt($this->_api->getData(self::INSTALMENTS_FEE_AMT));
-        $quote->setBaseInstalmentsFeeAmt($this->_api->getData(self::INSTALMENTS_FEE_AMT));
+        $quote->setCheckoutMethod($this->getCheckoutMethod());
+
         // import payment info
         $payment = $quote->getPayment();
         $payment->setMethod($this->_methodType);
-        //@TODO Refactor model load
-        //Mage::getSingleton('paypal/info')->importToPayment($this->_api, $payment);
-        $payment->setAdditionalInformation(self::PAYMENT_INFO_TRANSPORT_PAYER_ID, $this->_api->getPayerId())
+        $this->_paypalInfo->importToPayment($this->_getApi(), $payment);
+        $payment->setAdditionalInformation(self::PAYMENT_INFO_TRANSPORT_PAYER_ID, $this->_getApi()->getPayerId())
             ->setAdditionalInformation(self::PAYMENT_INFO_TRANSPORT_TOKEN, $token)
             ->setAdditionalInformation(self::INSTALMENTS_FEE_AMT, $this->_api->getData(self::INSTALMENTS_FEE_AMT))
             ->setAdditionalInformation(self::INSTALMENTS_TOTAL_COST, $this->_api->getData(self::INSTALMENTS_TOTAL_COST))
@@ -242,9 +249,11 @@ class Checkout extends \Magento\Paypal\Model\Express\Checkout
             ->setAdditionalInformation(self::INSTALMENTS_MONTHLY_PAYMENT,
                 $this->_api->getData(self::INSTALMENTS_MONTHLY_PAYMENT))
             ->setAdditionalInformation(self::INSTALMENTS_IS_FINANCING,
-                $this->_api->getData(self::INSTALMENTS_IS_FINANCING));
-        $quote->collectTotals()->save();
+                $this->_api->getData(self::INSTALMENTS_IS_FINANCING));;
+        $quote->collectTotals();
+        $this->quoteRepository->save($quote);
     }
+
 
     /**
      * Make sure addresses will be saved without validation errors
@@ -318,110 +327,6 @@ class Checkout extends \Magento\Paypal\Model\Express\Checkout
      * @param string $returnUrl
      * @param string $cancelUrl
      * @param bool|null $button
-     * @return mixed
-     */
-    /*public function start($returnUrl, $cancelUrl, $button = null)
-    {
-        $this->_quote->collectTotals();
-
-        if (!$this->_quote->getGrandTotal() && !$this->_quote->hasNominalItems()) {
-            Mage::throwException(Mage::helper('paypal')->__('PayPal does not support processing orders with zero amount. To complete your purchase, proceed to the standard checkout process.'));
-        }
-
-        $this->_quote->reserveOrderId()->save();
-        // prepare API
-        $this->_getApi();
-        $solutionType = $this->_config->getMerchantCountry() == 'DE'
-            ? \Magento\Paypal\Model\Config::EC_SOLUTION_TYPE_MARK : $this->_config->solutionType;
-        $this->_api->setAmount($this->_quote->getBaseGrandTotal())
-            ->setCurrencyCode($this->_quote->getBaseCurrencyCode())
-            ->setInvNum($this->_quote->getReservedOrderId())
-            ->setReturnUrl($returnUrl)
-            ->setCancelUrl($cancelUrl)
-            ->setSolutionType($solutionType)
-            ->setPaymentAction($this->_config->paymentAction);
-
-        if ($this->_giropayUrls) {
-            list($successUrl, $cancelUrl, $pendingUrl) = $this->_giropayUrls;
-            $this->_api->addData(array(
-                'giropay_cancel_url' => $cancelUrl,
-                'giropay_success_url' => $successUrl,
-                'giropay_bank_txn_pending_url' => $pendingUrl,
-            ));
-        }
-
-        if ($this->_isBml) {
-            $this->_api->setFundingSource('BML');
-        }
-
-        $this->_setBillingAgreementRequest();
-
-        if ($this->_config->requireBillingAddress == \Magento\Paypal\Model\Config::REQUIRE_BILLING_ADDRESS_ALL) {
-            $this->_api->setRequireBillingAddress(1);
-        }
-
-        // supress or export shipping address
-        if ($this->_quote->getIsVirtual()) {
-            if ($this->_config->requireBillingAddress == \Magento\Paypal\Model\Config::REQUIRE_BILLING_ADDRESS_VIRTUAL) {
-                $this->_api->setRequireBillingAddress(1);
-            }
-            $this->_api->setSuppressShipping(true);
-        } else {
-            $address = $this->_quote->getShippingAddress();
-            $isOverriden = 0;
-            if (true === $address->validate()) {
-                $isOverriden = 1;
-                $this->_api->setAddress($address);
-            }
-            $this->_quote->getPayment()->setAdditionalInformation(
-                self::PAYMENT_INFO_TRANSPORT_SHIPPING_OVERRIDDEN, $isOverriden
-            );
-            $this->_quote->getPayment()->save();
-        }
-
-        // add line items
-        $paypalCart = Mage::getModel('iways_paypalinstalments/cart', array($this->_quote));
-        $this->_api->setPaypalCart($paypalCart)
-            ->setIsLineItemsEnabled($this->_config->lineItemsEnabled)
-        ;
-
-        // add recurring payment profiles information
-        if ($profiles = $this->_quote->prepareRecurringPaymentProfiles()) {
-            foreach ($profiles as $profile) {
-                $profile->setMethodCode(\Magento\Paypal\Model\Config::METHOD_WPP_EXPRESS);
-                if (!$profile->isValid()) {
-                    Mage::throwException($profile->getValidationErrors(true, true));
-                }
-            }
-            $this->_api->addRecurringPaymentProfiles($profiles);
-        }
-
-        $this->_config->exportExpressCheckoutStyleSettings($this->_api);
-
-        // call API and redirect with token
-        $this->_api->callSetExpressCheckout();
-        $token = $this->_api->getToken();
-        $this->_redirectUrl = $button ? $this->_config->getExpressCheckoutStartUrl($token)
-            : $this->_config->getPayPalBasicStartUrl($token);
-
-        $this->_quote->getPayment()->unsAdditionalInformation(self::PAYMENT_INFO_TRANSPORT_BILLING_AGREEMENT);
-
-        // Set flag that we came from Express Checkout button
-        if (!empty($button)) {
-            $this->_quote->getPayment()->setAdditionalInformation(self::PAYMENT_INFO_BUTTON, 1);
-        } elseif ($this->_quote->getPayment()->hasAdditionalInformation(self::PAYMENT_INFO_BUTTON)) {
-            $this->_quote->getPayment()->unsAdditionalInformation(self::PAYMENT_INFO_BUTTON);
-        }
-
-        $this->_quote->getPayment()->save();
-        return $token;
-    }*/
-    /**
-     * Reserve order ID for specified quote and start checkout on PayPal
-     *
-     * @param string $returnUrl
-     * @param string $cancelUrl
-     * @param bool|null $button
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -450,7 +355,7 @@ class Checkout extends \Magento\Paypal\Model\Express\Checkout
         $totalAmount = round($this->_quote->getBaseGrandTotal(), 2);
         $this->_getApi()->setAmount($totalAmount)
             ->setCurrencyCode($this->_quote->getBaseCurrencyCode())
-            ->setInvNum($this->_quote->getReservedOrderId())
+            ->setInvNum('5'.$this->_quote->getReservedOrderId())
             ->setReturnUrl($returnUrl)
             ->setCancelUrl($cancelUrl)
             ->setSolutionType($solutionType)
@@ -514,5 +419,23 @@ class Checkout extends \Magento\Paypal\Model\Express\Checkout
         $payment->save();
 
         return $token;
+    }
+
+    /**
+     * Make sure addresses will be saved without validation errors
+     *
+     * @return void
+     */
+    private function ignoreAddressValidation()
+    {
+        $this->_quote->getBillingAddress()->setShouldIgnoreValidation(true);
+        if (!$this->_quote->getIsVirtual()) {
+            $this->_quote->getShippingAddress()->setShouldIgnoreValidation(true);
+            if (!$this->_config->getValue('requireBillingAddress')
+                && !$this->_quote->getBillingAddress()->getEmail()
+            ) {
+                $this->_quote->getBillingAddress()->setSameAsBilling(1);
+            }
+        }
     }
 }

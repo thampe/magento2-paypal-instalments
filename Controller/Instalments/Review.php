@@ -4,11 +4,11 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Iways\PayPalInstalments\Controller\Instalments;
-use Magento\Framework\Controller\ResultFactory;
+namespace Iways\PayPalInstalments\Controller\Express;
 
-class ReturnAction extends \Magento\Paypal\Controller\Express\ReturnAction
+class Review extends \Magento\Paypal\Controller\Express\AbstractExpress\Review
 {
+
     /**
      * Config mode type
      *
@@ -31,26 +31,23 @@ class ReturnAction extends \Magento\Paypal\Controller\Express\ReturnAction
     protected $_checkoutType = \Iways\PayPalInstalments\Model\Express\Checkout::class;
 
     /**
-     * Return from PayPal and dispatch customer to order review page
+     * Review order after returning from PayPal
      *
      * @return void|\Magento\Framework\Controller\Result\Redirect
      */
     public function execute()
     {
-        /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
-        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-
-        if ($this->getRequest()->getParam('retry_authorization') == 'true'
-            && is_array($this->_getCheckoutSession()->getPaypalTransactionData())
-        ) {
-            $this->_forward('placeOrder');
-            return;
-        }
         try {
-            $this->_getCheckoutSession()->unsPaypalTransactionData();
             $this->_initCheckout();
-            $this->_checkout->returnFromPaypal($this->_initToken());
-            $this->_redirect('*/*/review');
+            $this->_checkout->prepareOrderReview($this->_initToken());
+            $this->_view->loadLayout();
+            $reviewBlock = $this->_view->getLayout()->getBlock('paypal.express.review');
+            $reviewBlock->setQuote($this->_getQuote());
+            $reviewBlock->getChildBlock('details')->setQuote($this->_getQuote());
+            if ($reviewBlock->getChildBlock('shipping_method')) {
+                $reviewBlock->getChildBlock('shipping_method')->setQuote($this->_getQuote());
+            }
+            $this->_view->renderLayout();
             return;
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->messageManager->addExceptionMessage(
@@ -60,10 +57,12 @@ class ReturnAction extends \Magento\Paypal\Controller\Express\ReturnAction
         } catch (\Exception $e) {
             $this->messageManager->addExceptionMessage(
                 $e,
-                __('We can\'t process Instalment approval.')
+                __('We can\'t initialize Instalments review.')
             );
         }
-        $this->_getCheckoutSession()->getQuote()->setInstalmentsFee(null)->setBaseInstalmentsFee(null)->save();
+
+        /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
+        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         return $resultRedirect->setPath('checkout/cart');
     }
 }
