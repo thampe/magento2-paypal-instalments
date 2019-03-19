@@ -36,7 +36,7 @@ use Magento\Framework\DataObject;
  */
 class Checkout extends \Magento\Paypal\Model\Express\Checkout
 {
-    const INSTALMENTS_FEE = 'instalments_fee_amt';
+    const INSTALMENTS_FEE_AMT = 'instalments_fee_amt';
     const INSTALMENTS_TOTAL_COST = 'instalments_total_cost';
     const INSTALMENTS_MONTHLY_PAYMENT = 'instalments_monthly_payment';
     const INSTALMENTS_IS_FINANCING = 'instalments_is_financing';
@@ -236,7 +236,8 @@ class Checkout extends \Magento\Paypal\Model\Express\Checkout
         $billingAddress->setCustomerNote($exportedBillingAddress->getData('note'));
         $quote->setBillingAddress($billingAddress);
         $quote->setCheckoutMethod($this->getCheckoutMethod());
-
+        $quote->setInstalmentsFeeAmt($this->_api->getData(self::INSTALMENTS_FEE_AMT));
+        $quote->setBaseInstalmentsFeeAmt($this->_api->getData(self::INSTALMENTS_FEE_AMT));
         // import payment info
         $payment = $quote->getPayment();
         $payment->setMethod($this->_methodType);

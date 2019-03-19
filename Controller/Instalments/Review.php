@@ -4,9 +4,10 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Iways\PayPalInstalments\Controller\Express;
+namespace Iways\PayPalInstalments\Controller\Instalments;
+use Magento\Framework\Controller\ResultFactory;
 
-class Review extends \Magento\Paypal\Controller\Express\AbstractExpress\Review
+class Review extends \Magento\Paypal\Controller\Express\Review
 {
 
     /**
