@@ -8,8 +8,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:DataObject/etc/fieldset.xsd">
     <scope id="global">
-        <fieldset id="sales_convert_quote_amt">
-            <field name="instalments_fee">
+        <fieldset id="sales_convert_quote">
+            <field name="instalments_fee_amt">
                 <aspect name="to_order" />
             </field>
             <field name="base_instalments_fee_amt">

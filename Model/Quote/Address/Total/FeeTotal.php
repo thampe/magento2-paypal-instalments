@@ -9,7 +9,7 @@
 namespace Iways\PayPalInstalments\Model\Quote\Address\Total;
 
 
-class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
+class FeeTotal extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
 {
 
     protected $_code = 'instalments_fee_amt';
@@ -27,8 +27,8 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
     )
     {
         parent::collect($quote, $shippingAssignment, $total);
-        $total->addTotalAmount('instalments_fee_amt', $quote->getInstalmentsFeeAmt());
-        $total->addBaseTotalAmount('instalments_fee_amt', $quote->getBaseInstalmentsFeeAmt());
+        $total->addTotalAmount('instalments_fee_amt_total', $quote->getGrandTotal() + $quote->getInstalmentsFeeAmt());
+        $total->addBaseTotalAmount('instalments_fee_amt_total', $quote->getBaseGrandTotal() + $quote->getBaseInstalmentsFeeAmt());
         return $this;
     }
 
@@ -43,15 +43,14 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
     public function fetch(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Address\Total $total)
     {
         $result = null;
-        $amount = $total->getInstalmentsFeeAmtAmount();
+        $amount = $total->getInstalmentsFeeAmtTotalAmount();
         if ($amount != 0) {
             $result = [
                 'code' => $this->getCode(),
-                'title' => __('Instalments Fee'),
+                'title' => __('Instalments Fee Total'),
                 'value' => $amount,
-                'base_value' => $total->getBaseInstalmentsFeeAmtAmount(),
-                'area' => 'footer',
-                'strong' => null
+                'base_value' => $total->getBaseInstalmentsFeeAmtTotalAmount(),
+                'area' => 'footer'
             ];
         }
         return $result;
