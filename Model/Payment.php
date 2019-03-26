@@ -31,6 +31,8 @@ class Payment extends \Magento\Paypal\Model\Express
      * @var $_proType string
      */
     protected $_proType = Pro::class;
+
+    protected $_infoBlockType = \Magento\Paypal\Block\Payment\Info::class;
     /**
      * Payment Method features
      * @var bool
