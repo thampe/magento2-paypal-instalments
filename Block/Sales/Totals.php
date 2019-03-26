@@ -23,6 +23,8 @@ class Totals extends \Magento\Framework\View\Element\Template
                 'code' => 'instalments_fee_amt',
                 'value' => $this->getSource()->getInstalmentsFeeAmt(),
                 'label' => __('Instalments Fee'),
+                'strong' => true,
+                'area' => 'footer'
             ]
         );
         $this->getParentBlock()->addTotal($total, 'grand_total');
@@ -32,9 +34,11 @@ class Totals extends \Magento\Framework\View\Element\Template
                 'code' => 'instalments_fee_amt_total',
                 'value' => $this->getSource()->getInstalmentsFeeAmt() + $this->getSource()->getGrandTotal(),
                 'label' => __('Instalments Fee Total'),
+                'strong' => true,
+                'area' => 'footer'
             ]
         );
-        $this->getParentBlock()->addTotal($total, 'grand_total');
+        $this->getParentBlock()->addTotal($total, 'instalments_fee_amt');
 
         return $this;
     }
