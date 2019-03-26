@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Iways_PayPalInstalments::css/installments.css" />
+    </head>
+    <body>
+        <referenceContainer name="footer">
+            <block class="Iways\PayPalInstalments\Block\PayPalData"
+                   name="iways_paypalinstalments_block_paypaldata"
+                   as="iways_paypalinstallments_block_paypaldata"
+                   template="Iways_PayPalInstalments::instalments/genericUpstream.phtml"
+                   after="bugs" />
+        </referenceContainer>
+    </body>
+</page>
