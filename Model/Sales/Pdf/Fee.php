@@ -21,11 +21,12 @@ class Fee extends \Magento\Sales\Model\Order\Pdf\Total\DefaultTotal
             [
                 'amount' => $this->getOrder()->formatPriceTxt($this->getOrder()->getInstalmentsFeeAmt()),
                 'label' => __('Instalments Fee'),
-                'font_size' => $fontSize
+                'font_size' => $fontSize,
+                'border_top' => true
             ],
             [
                 'amount' => $this->getOrder()->formatPriceTxt($this->getOrder()->getInstalmentsFeeAmt() + $this->getOrder()->getGrandTotal()),
-                'label' => __('Instalments Fee Total'),
+                'label' => __('Grand Total (incl. Fee)'),
                 'font_size' => $fontSize
             ],
         ];
