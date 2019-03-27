@@ -14,6 +14,8 @@
 namespace Iways\PayPalInstalments\Model;
 
 
+use Iways\PayPalInstalments\Block\Info;
+
 /**
  * Class Payment
  *
@@ -32,7 +34,7 @@ class Payment extends \Magento\Paypal\Model\Express
      */
     protected $_proType = Pro::class;
 
-    protected $_infoBlockType = \Magento\Paypal\Block\Payment\Info::class;
+    protected $_infoBlockType = Info::class;
     /**
      * Payment Method features
      * @var bool

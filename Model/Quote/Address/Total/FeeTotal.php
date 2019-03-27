@@ -12,7 +12,7 @@ namespace Iways\PayPalInstalments\Model\Quote\Address\Total;
 class FeeTotal extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
 {
 
-    protected $_code = 'instalments_fee_amt';
+    protected $_code = 'instalments_fee_amt_total';
 
     /**
      * @param \Magento\Quote\Model\Quote $quote
