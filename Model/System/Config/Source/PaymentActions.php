@@ -22,7 +22,7 @@ namespace Iways\PayPalInstalments\Model\System\Config\Source;
  * Source model for available payment actions
  *
  * @category   Iways
- * @package    Iways_PaypalInstalments
+ * @package    Iways_PayPalInstalments
  * @author robert
  */
 class PaymentActions

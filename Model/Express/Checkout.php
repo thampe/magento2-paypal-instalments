@@ -17,7 +17,7 @@
  * License http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *
  */
-namespace Iways\PaypalInstalments\Model\Express;
+namespace Iways\PayPalInstalments\Model\Express;
 use Iways\PayPalInstalments\Model\Api\Nvp;
 use Iways\PayPalInstalments\Model\Cart as PaypalCart;
 use Iways\PayPalInstalments\Model\Config as PaypalConfig;
@@ -31,7 +31,7 @@ use Magento\Framework\DataObject;
  * Use current Paypal Express method instance
  *
  * @category   Iways
- * @package    Iways_PaypalInstalments
+ * @package    Iways_PayPalInstalments
  * @author robert
  */
 class Checkout extends \Magento\Paypal\Model\Express\Checkout
@@ -68,7 +68,7 @@ class Checkout extends \Magento\Paypal\Model\Express\Checkout
      *
      * @var unknown_type
      */
-    protected $_methodType = \Iways\PaypalInstalments\Model\Config::METHOD_INSTALMENTS;
+    protected $_methodType = \Iways\PayPalInstalments\Model\Config::METHOD_INSTALMENTS;
 
     /**
      * @param \Psr\Log\LoggerInterface $logger
@@ -162,10 +162,12 @@ class Checkout extends \Magento\Paypal\Model\Express\Checkout
      * export shipping address in case address absence
      *
      * @param string $token
+     * @param string|null $payerIdentifier
      * @return void
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function returnFromPaypal($token)
+    public function returnFromPaypalInstalments($token, string $payerIdentifier = null)
     {
         $this->_getApi()
             ->setToken($token)
@@ -242,7 +244,8 @@ class Checkout extends \Magento\Paypal\Model\Express\Checkout
         $payment = $quote->getPayment();
         $payment->setMethod($this->_methodType);
         $this->_paypalInfo->importToPayment($this->_getApi(), $payment);
-        $payment->setAdditionalInformation(self::PAYMENT_INFO_TRANSPORT_PAYER_ID, $this->_getApi()->getPayerId())
+        $payerId = $payerIdentifier ? : $this->_getApi()->getPayerId();
+        $payment->setAdditionalInformation(self::PAYMENT_INFO_TRANSPORT_PAYER_ID, $payerId)
             ->setAdditionalInformation(self::PAYMENT_INFO_TRANSPORT_TOKEN, $token)
             ->setAdditionalInformation(self::INSTALMENTS_FEE_AMT, $this->_api->getData(self::INSTALMENTS_FEE_AMT))
             ->setAdditionalInformation(self::INSTALMENTS_TOTAL_COST, $this->_api->getData(self::INSTALMENTS_TOTAL_COST))
@@ -250,7 +253,7 @@ class Checkout extends \Magento\Paypal\Model\Express\Checkout
             ->setAdditionalInformation(self::INSTALMENTS_MONTHLY_PAYMENT,
                 $this->_api->getData(self::INSTALMENTS_MONTHLY_PAYMENT))
             ->setAdditionalInformation(self::INSTALMENTS_IS_FINANCING,
-                $this->_api->getData(self::INSTALMENTS_IS_FINANCING));;
+                $this->_api->getData(self::INSTALMENTS_IS_FINANCING));
         $quote->collectTotals();
         $this->quoteRepository->save($quote);
     }

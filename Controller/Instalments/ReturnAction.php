@@ -49,7 +49,7 @@ class ReturnAction extends \Magento\Paypal\Controller\Express\ReturnAction
         try {
             $this->_getCheckoutSession()->unsPaypalTransactionData();
             $this->_initCheckout();
-            $this->_checkout->returnFromPaypal($this->_initToken());
+            $this->_checkout->returnFromPaypalInstalments($this->_initToken());
             $this->_redirect('*/*/review');
             return;
         } catch (\Magento\Framework\Exception\LocalizedException $e) {

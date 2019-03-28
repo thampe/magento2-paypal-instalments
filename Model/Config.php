@@ -22,7 +22,7 @@ namespace Iways\PayPalInstalments\Model;
  * Iways PayPalInstalments Model Instalments
  *
  * @category   Iways
- * @package    Iways_PaypalInstalments
+ * @package    Iways_PayPalInstalments
  * @author robert
  */
 class Config extends \Magento\Paypal\Model\Config
@@ -162,8 +162,6 @@ class Config extends \Magento\Paypal\Model\Config
     public function getPaymentAction()
     {
         switch ($this->getValue('paymentAction')) {
-            case self::PAYMENT_ACTION_AUTH:
-                return \Magento\Payment\Model\Method\AbstractMethod::ACTION_AUTHORIZE;
             case self::PAYMENT_ACTION_SALE:
                 return \Magento\Payment\Model\Method\AbstractMethod::ACTION_AUTHORIZE_CAPTURE;
             case self::PAYMENT_ACTION_ORDER:
