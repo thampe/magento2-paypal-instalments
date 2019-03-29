@@ -25,7 +25,7 @@
         <payment>
             <iways_paypalinstalments_payment>
                 <model>Iways\PayPalInstalments\Model\Payment</model>
-                <title>PayPal Instalments</title>
+                <title>Ratenzahlung Powered by PayPal</title>
                 <payment_action>authorize</payment_action>
                 <can_use_checkout>1</can_use_checkout>
                 <active>0</active>
