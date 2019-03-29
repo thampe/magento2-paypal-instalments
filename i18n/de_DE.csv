@@ -50,3 +50,5 @@
 "Unable to cancel Instalments.","Ratenzahlung konnte nicht abgebrochen werden."
 "Unable to initialize Express Checkout.","Express Checkout konnt enicht initialisiert werden."
 "Unable to process Instalments approval.","Genehmigung für Ratenzahlung konnte nicht durchgeführt werden."
+"PayPalInstalments Payment Settings","PayPal Ratenkauf Zahlungseinstellungen"
+"PayPalInstalments Api Settings","PayPal Api Einstellungen (gleich mit PayPal Express)"

@@ -83,7 +83,7 @@
                         <config_path>payment/iways_paypalinstalments_payment/specificcountry</config_path>
                     </field>
                     <field id="payment_action" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>Payment from Specific Countries</label>
+                        <label>Payment Action</label>
                         <source_model>Iways\PayPalInstalments\Model\System\Config\Source\PaymentActions</source_model>
                         <can_be_empty>1</can_be_empty>
                         <config_path>payment/iways_paypalinstalments_payment/payment_action</config_path>
