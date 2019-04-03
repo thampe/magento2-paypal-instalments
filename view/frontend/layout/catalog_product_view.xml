@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Iways_PayPalInstalments::css/installments.css" />
+    </head>
+    <body>
+        <referenceBlock name="product.info.main">
+            <block class="Iways\PayPalInstalments\Block\Upstream"
+                   name="iways_paypalinstalments_block_upstream"
+                   as="iways_paypalinstalments_block_upstream"
+                   template="Iways_PayPalInstalments::instalments/specificUpstream.phtml"
+                   after="product.info.price"/>
+        </referenceBlock>
+    </body>
+</page>

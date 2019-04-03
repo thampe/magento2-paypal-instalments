@@ -14,20 +14,20 @@ class Upstream extends Template
 {
     protected $_scopeConfig;
     protected $rest;
-    protected $objectManager;
+    #protected $objectManager;
     protected $financeInformation = array();
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Iways\PayPalInstalments\Model\Api\Rest $rest,
-        \Magento\Framework\App\ObjectManager $objectManager,
+        #\Magento\Framework\App\ObjectManager $objectManager,
         array $data = []
     )
     {
         $this->_scopeConfig = $scopeConfig;
         $this->rest = $rest;
-        $this->objectManager = $objectManager;
+        #$this->objectManager = $objectManager;
         return parent::__construct($context, $data);
     }
 
@@ -51,9 +51,9 @@ class Upstream extends Template
     public function getFinanceInformation($amount = false)
     {
         if($amount === false){
-            $objectManager = $this->objectManager::getInstance();
-            $cart = $objectManager->get('\Magento\Checkou\Model\Cart');
-            $amount = $cart->getQuote()->getGrandTotal();
+            #$objectManager = $this->objectManager::getInstance();
+            #$cart = $objectManager->get('\Magento\Checkout\Model\Cart');
+            #$amount = $cart->getQuote()->getGrandTotal();
         }
         if(!isset($this->financeInformation[$amount])){
             $this->financeInformation[$amount] = $this->rest->getFinanceInfo($amount);

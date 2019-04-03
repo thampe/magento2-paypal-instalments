@@ -6,11 +6,11 @@
     </head>
     <body>
         <referenceContainer name="footer">
-            <block class="Iways\PayPalInstalments\Block\PayPalData"
-                   name="iways_paypalinstalments_block_paypaldata"
-                   as="iways_paypalinstallments_block_paypaldata"
+            <block class="Iways\PayPalInstalments\Block\Upstream"
+                   name="iways_paypalinstalments_block_upstream"
+                   as="iways_paypalinstalments_block_upstream"
                    template="Iways_PayPalInstalments::instalments/genericUpstream.phtml"
-                   after="bugs" />
+                   after="content" />
         </referenceContainer>
     </body>
 </page>
