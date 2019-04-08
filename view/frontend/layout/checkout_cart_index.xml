@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Iways_PayPalInstalments::css/installments.css" />
+    </head>
+    <body>
+        <referenceBlock name="cart.summary">
+            <block class="Iways\PayPalInstalments\Block\Upstream"
+                   name="iways_paypalinstalments_block_upstream"
+                   as="iways_paypalinstalments_block_upstream"
+                   template="Iways_PayPalInstalments::instalments/specificUpstream.phtml"
+                    before="checkout.methods.items"/><!-- TODO: find correct spot -->
+        </referenceBlock>
+    </body>
+</page>

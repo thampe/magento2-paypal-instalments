@@ -84,7 +84,7 @@ class Rest
     {
         $auth = $this->cache->load(self::AUTH_CACHE_KEY);
         if(!$auth){
-            $auth = $this->getAccessToken();
+            $auth = $this->refreshAccessToken();
         }
         $auth = json_decode($auth);
         return $auth->access_token;
@@ -99,7 +99,9 @@ class Rest
      */
     protected function refreshAccessToken()
     {
-        $client = new \Zend_Http_Client($this->getPayPalUrl('v1/oauth/token'));
+        $url = $this->getPayPalUrl('v1/oauth2/token');
+
+        $client = new \Zend_Http_Client($url);
         $client->setAuth($this->clientId, $this->clientSecret);
         $client->setHeaders($this->getStandartHeaders(false));
         $client->setParameterPost('grant_type', 'client_credentials');
@@ -115,6 +117,6 @@ class Rest
     public function getPayPalUrl($endpoint = "")
     {
         return sprintf('https://api.%spaypal.com/%s',
-            $this->sandboxFlag ? 'sandbox.' : '', ltrim($endpoint, '/'));
+            !$this->sandboxFlag ? 'sandbox.' : '', ltrim($endpoint, '/'));
     }
 }

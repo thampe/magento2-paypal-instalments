@@ -1,3 +1,51 @@
-<div class="specific-pp-installment">
-    <p>HALLO WELT ITS ME</p>
-</div>
+<?php
+$location = $block->getSiteLocation();
+
+if($location == "catalog_product_view"){
+    $financeInformation = $block->getFinanceInformationForCurrentProduct();
+}elseif($location == "checkout_cart_index"){
+    $financeInformation = $block->getFinanceInformationForCart();
+}
+
+if($financeInformation != "hide"):
+    if($financeInformation):?>
+        <div class="specific-pp-installment">
+            <p class="installment-head"><?= 'Finanzierung ab ' . $block->formatPrice($financeInformation->monthly_payment->value) .
+                ' in ' . $financeInformation->credit_financing->term . ' ' . $block->translateInterval($financeInformation->credit_financing->interval, true) .
+                ' Raten mit Ratenzahlung Powered by PayPal'?></p>
+            <span class="small-font">Repräsentatives Beispiel gem. § 6a PAngV:</span>
+            <table class="small-font">
+                <tr>
+                    <td>Nettodarlehensbetrag:</td>
+                    <?php if($location == "catalog_product_view"): ?>
+                        <td><?= $block->getItemPrice(true) ?></td>
+                    <?php elseif($location == "checkout_cart_index"): ?>
+                        <td><!-- ADD CART TOTAL --></td>
+                    <?php endif; ?>
+                </tr>
+                <tr>
+                    <td>fester Sollzinssatz:</td>
+                    <td><?= round($financeInformation->credit_financing->nominal_rate, 2) . '%' ?></td>
+                </tr>
+                <tr>
+                    <td>effektiver Jahreszins:</td>
+                    <td><?= $financeInformation->credit_financing->apr . '%' ?></td>
+                </tr>
+                <tr>
+                    <td>zu zahlender Gesamtbetrag:</td>
+                    <td><?= $block->formatPrice($financeInformation->total_cost->value) ?></td>
+                </tr>
+                <tr>
+                    <td><?= $financeInformation->credit_financing->term . ' ' . $block->translateInterval($financeInformation->credit_financing->interval, false)
+                        . ' Raten in Höhe von je:' ?></td>
+                    <td><?= $block->formatPrice($financeInformation->monthly_payment->value) ?></td>
+                </tr>
+            </table>
+            <p class="small-font">Darlehensgeber: <?= $block->getLender() ?></p>
+        </div>
+    <?php else: ?>
+        <div class="specific-pp-installment align-center">
+            <p>Finanzierung verfügbar ab <?= $block->formatPrice(99) ?> bis <?= $block->formatPrice(5000) ?> Warenkorbwert</p>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>

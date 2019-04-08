@@ -13,8 +13,50 @@
 }
 
 .specific-pp-installment{
-    height: 200px;
-    width: 200px;
-    margin: auto;
-    background: red;
+    max-width: 360px;
+    margin: 0 auto 30px;
+    border: 3px solid #009CDE;
+    border-radius: 15px;
+    padding: 5px;
+    color: #636363;
+}
+
+.specific-pp-installment.align-center{
+    text-align: center;
+}
+
+.specific-pp-installment p{
+    margin: 0;
+}
+
+.specific-pp-installment .installment-head{
+    line-height: 16px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.specific-pp-installment .small-font{
+    font-size: 12px;
+    line-height: 17.5px;
+
+}
+
+.specific-pp-installment table{
+    background: #f3f3f3;
+    margin: 5px 0;
+}
+
+.specific-pp-installment table td{
+    padding: 0;
+    line-height: 18px;
+}
+
+.specific-pp-installment table td:nth-child(1){
+    padding-left: 5px;
+}
+
+.specific-pp-installment table td:nth-child(2){
+    padding-right: 5px;
+    text-align: right;
+    font-weight: bold;
 }
