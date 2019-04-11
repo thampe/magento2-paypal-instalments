@@ -17,6 +17,7 @@ namespace Iways\PayPalInstalments\Model;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Escaper;
 use Magento\Payment\Helper\Data as PaymentHelper;
+use Iways\PayPalInstalments\Block\Upstream as Upstream;
 use Psr\Log\LoggerInterface;
 
 class ConfigProvider implements ConfigProviderInterface
@@ -31,14 +32,19 @@ class ConfigProvider implements ConfigProviderInterface
      */
     protected $method;
 
+    protected $upstream;
+
     /**
      * ConfigProvider constructor.
      * @param PaymentHelper $paymentHelper
+     * @param Upstream upstream
      */
     public function __construct(
-        PaymentHelper $paymentHelper
+        PaymentHelper $paymentHelper,
+        Upstream $upstream
     ) {
         $this->method = $paymentHelper->getMethodInstance($this->methodCode);
+        $this->upstream = $upstream;
     }
 
     /**
@@ -49,8 +55,11 @@ class ConfigProvider implements ConfigProviderInterface
         return $this->method->isAvailable() ? [
             'payment' => [
                 'iways_paypalinstalments_payment' => [
-                    'redirectUrl' => $this->method->getCheckoutRedirectUrl()
-                ],
+                    'redirectUrl' => $this->method->getCheckoutRedirectUrl(),
+                    'upstreamData' => $this->upstream->getQualifyingFinancingOptionsForPaymentMethod(),
+                    'isSpecific' => $this->upstream->isSpecific(),
+                    'lender' => $this->upstream->getLender()
+                ]
             ],
         ] : [];
     }

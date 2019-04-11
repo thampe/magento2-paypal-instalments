@@ -9,7 +9,11 @@
     line-height: 21px;
     text-align: center;
     color: #636363;
-    background: url(pp_installments.jpg) no-repeat scroll 50% 53px/auto 45px;
+    background: #fff;
+}
+
+.paypal-installments-image{
+    height: 45px;
 }
 
 .specific-pp-installment{
@@ -19,6 +23,7 @@
     border-radius: 15px;
     padding: 5px;
     color: #636363;
+    background: #fff;
 }
 
 .specific-pp-installment.align-center{
@@ -59,4 +64,118 @@
     padding-right: 5px;
     text-align: right;
     font-weight: bold;
+}
+
+#show-installments-overlay{
+    cursor: pointer;
+}
+
+#pp-installments-overlay{
+    background: #fff;
+    padding: 10px;
+    position:fixed;
+    border: 3px solid #009CDE;
+    max-height: 70%;
+    overflow-y: auto;
+    top: 10%;
+    z-index: 1000;
+    width: 70%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    text-align: center;
+    border-radius: 20px;
+}
+
+#pp-installments-overlay #close-button{
+    position: absolute;
+    font-size: 20px;
+    line-height: 20px;
+    right: 16px;
+    top: 10px;
+    cursor:pointer;
+    color: #000;
+}
+
+#pp-installments-overlay #close-button:hover{
+    text-decoration: none;
+}
+
+#pp-installments-overlay p{
+    margin-bottom: 0;
+}
+
+#pp-installments-overlay .bigger-font{
+    font-size: 17px;
+    font-weight: bold;
+}
+
+#pp-installments-overlay .paypal-options-wrapper{
+    overflow: hidden;
+    margin-bottom: 60px;
+}
+
+#pp-installments-overlay .paypal-options-wrapper .paypal-option{
+    float: left;
+    text-align: center;
+}
+
+#pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-1{
+    width: 100%;
+    float: none;
+    margin: auto;
+}
+
+#pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-1 .paypal-option-content{
+    max-width: 210px;
+    margin: auto;
+}
+
+#pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-2{
+    width: 50%;
+}
+
+#pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-3{
+    width: 33%;
+}
+
+#pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-4{
+    width: 25%;
+}
+
+#pp-installments-overlay .paypal-options-wrapper .paypal-option .paypal-option-content{
+    text-align: left;
+    display: inline-block;
+    width: 84%;
+    border: 2px solid #000;
+    padding: 10px;
+    margin: 5px 2%;
+}
+
+#pp-installments-overlay .paypal-options-wrapper .paypal-option .paypal-option-content .big-font{
+    font-size: 14px;
+}
+
+#pp-installments-overlay .paypal-options-wrapper .paypal-option .paypal-option-content td{
+    padding: 0;
+    font-size: 12px;
+    line-height: 17.5px;
+}
+
+#pp-installments-overlay .paypal-options-wrapper .paypal-option .paypal-option-content td:nth-child(2) {
+    text-align: right;
+}
+
+@media (max-width: 949px) {
+    #pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-4,
+    #pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-3{
+        width: 50%;
+    }
+}
+
+@media (max-width: 550px) {
+    #pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-4,
+    #pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-3,
+    #pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-2{
+        width: 100%;
+    }
 }

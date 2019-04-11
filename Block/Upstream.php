@@ -73,7 +73,7 @@ class Upstream extends Template
     public function getFinanceInformationForCart()
     {
         if($this->_scopeConfig->getValue("payment/iways_paypalinstalments_section/iways_paypalinstalments/specific_upstream_cart")){
-            return $this->getQualifyingFinancingOptions(/** TODO: add current cart amount */ 99);
+            return $this->getQualifyingFinancingOptions($this->getCartTotal());
         }
         return "hide";
     }
@@ -81,17 +81,17 @@ class Upstream extends Template
     public function getQualifyingFinancingOptionsForPaymentMethod($amount = false)
     {
         if($this->_scopeConfig->getValue("payment/iways_paypalinstalments_section/iways_paypalinstalments/specific_upstream_payment_method")){
-            return $this->getQualifyingFinancingOptions($amount);
+            /** TODO: get checkout amount */
+            return $this->getQualifyingFinancingOptions(150);
         }
         return "hide";
     }
 
-    /** TODO: NOTE - for testing this is set to non qualifying financing options */
     public function getQualifyingFinancingOptions($amount = false)
     {
         $financeInformation = $this->getFinanceInformation($amount);
-        if(isset($financeInformation->financing_options[0]->non_qualifying_financing_options[0])){
-            return $financeInformation->financing_options[0]->non_qualifying_financing_options[0];
+        if(isset($financeInformation->financing_options[0]->qualifying_financing_options[0])){
+            return $financeInformation->financing_options[0]->qualifying_financing_options;
         }
         return false;
     }
@@ -107,7 +107,7 @@ class Upstream extends Template
         }
     }
 
-    /** TODO: Product price doesnt work on configurable products. Price on the base product is 0. */
+    /** TODO: using final price of product, not sure if that is the correct way */
     public function getItemPrice($withCurrencyCode)
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -116,9 +116,16 @@ class Upstream extends Template
         $currentProduct = $objectManager->create('Magento\Catalog\Model\Product')->load($productId);
         if($withCurrencyCode){
             $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data');
-            return $priceHelper->currency($currentProduct->getPrice(), true, false);
+            return $priceHelper->currency($currentProduct->getFinalPrice(), true, false);
         }
-        return $currentProduct->getPrice();
+        return $currentProduct->getFinalPrice();
+    }
+
+    public function getCartTotal()
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
+        return $cart->getQuote()->getGrandTotal();
     }
 
     public function formatPrice($price)
@@ -131,5 +138,10 @@ class Upstream extends Template
     public function getLender()
     {
         return $this->_scopeConfig->getValue("payment/iways_paypalinstalments_section/iways_paypalinstalments/lender");
+    }
+
+    public function isSpecific()
+    {
+        return $this->_scopeConfig->getValue("payment/iways_paypalinstalments_section/iways_paypalinstalments/specific_upstream_calculated");
     }
 }

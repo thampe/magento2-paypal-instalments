@@ -3,49 +3,106 @@ $location = $block->getSiteLocation();
 
 if($location == "catalog_product_view"){
     $financeInformation = $block->getFinanceInformationForCurrentProduct();
+    $netLoanAmount = $block->getItemPrice(true);
 }elseif($location == "checkout_cart_index"){
     $financeInformation = $block->getFinanceInformationForCart();
+    $netLoanAmount = $block->formatPrice($block->getCartTotal());
 }
 
 if($financeInformation != "hide"):
-    if($financeInformation):?>
-        <div class="specific-pp-installment">
-            <p class="installment-head"><?= 'Finanzierung ab ' . $block->formatPrice($financeInformation->monthly_payment->value) .
-                ' in ' . $financeInformation->credit_financing->term . ' ' . $block->translateInterval($financeInformation->credit_financing->interval, true) .
-                ' Raten mit Ratenzahlung Powered by PayPal'?></p>
-            <span class="small-font">Repräsentatives Beispiel gem. § 6a PAngV:</span>
-            <table class="small-font">
-                <tr>
-                    <td>Nettodarlehensbetrag:</td>
-                    <?php if($location == "catalog_product_view"): ?>
-                        <td><?= $block->getItemPrice(true) ?></td>
-                    <?php elseif($location == "checkout_cart_index"): ?>
-                        <td><!-- ADD CART TOTAL --></td>
-                    <?php endif; ?>
-                </tr>
-                <tr>
-                    <td>fester Sollzinssatz:</td>
-                    <td><?= round($financeInformation->credit_financing->nominal_rate, 2) . '%' ?></td>
-                </tr>
-                <tr>
-                    <td>effektiver Jahreszins:</td>
-                    <td><?= $financeInformation->credit_financing->apr . '%' ?></td>
-                </tr>
-                <tr>
-                    <td>zu zahlender Gesamtbetrag:</td>
-                    <td><?= $block->formatPrice($financeInformation->total_cost->value) ?></td>
-                </tr>
-                <tr>
-                    <td><?= $financeInformation->credit_financing->term . ' ' . $block->translateInterval($financeInformation->credit_financing->interval, false)
-                        . ' Raten in Höhe von je:' ?></td>
-                    <td><?= $block->formatPrice($financeInformation->monthly_payment->value) ?></td>
-                </tr>
-            </table>
-            <p class="small-font">Darlehensgeber: <?= $block->getLender() ?></p>
+    if($financeInformation):
+        if($block->isSpecific()): ?>
+            <div class="specific-pp-installment">
+                <p class="installment-head"><?= __('Finanzierung ab %1 in %2 %3 Raten mit Ratenzahlung Powered by PayPal',
+                        $block->formatPrice($financeInformation[0]->monthly_payment->value),
+                        $financeInformation[0]->credit_financing->term,
+                        $block->translateInterval($financeInformation[0]->credit_financing->interval, true))?></p>
+                <span class="small-font"><?= __("Repräsentatives Beispiel gem. § 6a PAngV:") ?></span>
+                <table class="small-font">
+                    <tr>
+                        <td><?= __("Nettodarlehensbetrag:") ?></td>
+                        <td><?= $netLoanAmount ?></td>
+                    </tr>
+                    <tr>
+                        <td><?= __("fester Sollzinssatz:") ?></td>
+                        <td><?= round($financeInformation[0]->credit_financing->nominal_rate, 2) . '%' ?></td>
+                    </tr>
+                    <tr>
+                        <td><?= __("effektiver Jahreszins:") ?></td>
+                        <td><?= $financeInformation[0]->credit_financing->apr . '%' ?></td>
+                    </tr>
+                    <tr>
+                        <td><?= __("zu zahlender Gesamtbetrag:") ?></td>
+                        <td><?= $block->formatPrice($financeInformation[0]->total_cost->value) ?></td>
+                    </tr>
+                    <tr>
+                        <td><?= __('%1 %2 Raten in Höhe von je:', $financeInformation[0]->credit_financing->term,
+                                $block->translateInterval($financeInformation[0]->credit_financing->interval, false)) ?></td>
+                        <td><?= $block->formatPrice($financeInformation[0]->monthly_payment->value) ?></td>
+                    </tr>
+                </table>
+                <p class="small-font"><?= __("Darlehensgeber:") . " " . $block->getLender() ?></p>
+                <a onclick="showPPOverlay()" id="show-installments-overlay"><?= __("Informationen zu möglichen Raten") ?></a>
+            </div>
+        <?php else: ?>
+            <div class="specific-pp-installment align-center">
+                <p><?= _('Sie können diesen Artikel auch finanzieren!') ?></p>
+                <a onclick="showPPOverlay()" id="show-installments-overlay"><?= __("Informationen zu möglichen Raten") ?></a>
+            </div>
+        <?php endif; ?>
+        <div id="pp-installments-overlay" style="display: none;">
+            <a onclick="hidePPOverlay()" id="close-button">x</a>
+            <img class="paypal-installments-image" src="<?php echo $this->getViewFileUrl('Iways_PayPalInstalments::images/pp_installments.jpg'); ?>" alt="paypal-icon">
+            <p class="bigger-font"><?= __("Zahlen Sie bequem und einfach in monatlichen Raten") ?></p>
+            <p><?= __("Ihre Ratenzahlung und den passenden Finanzierungsplan können Sie im Rahmen des Bestellprozesses auswählen.
+            Ihr Antrag erfolgt komplett online und wird in wenigen Schritten hier im Shop abgeschlossen.") ?></p>
+            <p class="bigger-font"><?= __("Nettodarlehensbetrag:") . " " . $netLoanAmount ?></p>
+            <div class="paypal-options-wrapper">
+                <?php foreach($financeInformation as $key => $financeOption): ?>
+                    <div class="paypal-option option-col-<?= count($financeInformation) ?>">
+                        <div class="paypal-option-content">
+                            <p class="big-font"><strong><?= __("Plan") . " " . ($key + 1) ?><?php if($key==0){echo " *";} ?></strong></p>
+                            <p><?= __("%1 %2 Raten in Höhe von je", $financeOption->credit_financing->term, $block->translateInterval($financeOption->credit_financing->interval, true))?></p>
+                            <table>
+                                <tr>
+                                    <td><p></p></td>
+                                    <td><p class="big-font"><strong><?= $block->formatPrice($financeOption->monthly_payment->value) ?></strong></p></td>
+                                </tr>
+                                <tr>
+                                    <td><p><?= __("fester Sollzinssatz:") ?></p></td>
+                                    <td><p><?= round($financeOption->credit_financing->nominal_rate, 2) . '%' ?></p></td>
+                                </tr>
+                                <tr>
+                                    <td><p><?= __("effektiver Jahreszins:") ?></p></td>
+                                    <td><p><?= $financeOption->credit_financing->apr . '%' ?></p></td>
+                                </tr>
+                                <tr>
+                                    <td><p><?= __("Zinsbetrag:") ?></p></td>
+                                    <td><p><?= $block->formatPrice($financeOption->total_interest->value) ?></p></td>
+                                </tr>
+                                <tr>
+                                    <td><p><strong><?= __("Gesamtbetrag:") ?></strong></p></td>
+                                    <td><p><strong><?= $block->formatPrice($financeOption->total_cost->value) ?></strong></p></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                <?php endforeach;?>
+            </div>
+            <p><?= __("* Zugleich repräsentatives Beispiel gem. $ 6a PAngV") ?></p>
+            <p><?= __("Darlehensgeber:") . " " . $block->getLender() ?></p>
         </div>
+        <script type="text/javascript">
+            function showPPOverlay() {
+                document.getElementById("pp-installments-overlay").style.display = "block";
+            }
+            function hidePPOverlay() {
+                document.getElementById("pp-installments-overlay").style.display = "none";
+            }
+        </script>
     <?php else: ?>
         <div class="specific-pp-installment align-center">
-            <p>Finanzierung verfügbar ab <?= $block->formatPrice(99) ?> bis <?= $block->formatPrice(5000) ?> Warenkorbwert</p>
+            <p><?= __("Finanzierung verfügbar ab %1 bis %2 Warenkorbwert", $block->formatPrice(99), $block->formatPrice(5000))?></p>
         </div>
     <?php endif; ?>
 <?php endif; ?>

@@ -9,7 +9,7 @@
                    name="iways_paypalinstalments_block_upstream"
                    as="iways_paypalinstalments_block_upstream"
                    template="Iways_PayPalInstalments::instalments/specificUpstream.phtml"
-                    before="checkout.methods.items"/><!-- TODO: find correct spot -->
+                   before="checkout.cart.methods.bottom"/>
         </referenceBlock>
     </body>
 </page>

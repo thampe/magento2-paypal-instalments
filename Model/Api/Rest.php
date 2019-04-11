@@ -14,6 +14,7 @@ class Rest
     protected $clientSecret;
     protected $clientId;
     protected $sandboxFlag;
+    protected $merchantCountry;
     protected $cache;
     protected $messageManager;
     protected $storeManager;
@@ -31,7 +32,8 @@ class Rest
         $this->_scopeConfig = $scopeConfig;
         $this->clientId = $this->_scopeConfig->getValue("iways_paypalinstalments/api/client_id");
         $this->clientSecret = $this->_scopeConfig->getValue("iways_paypalinstalments/api/client_secret");
-        $this->sandboxFlag = $this->_scopeConfig->getValue("iways_paypalinstalments/api/sandbox_flag");
+        $this->sandboxFlag = $this->_scopeConfig->getValue("paypal/wpp/sandbox_flag");
+        $this->merchantCountry = $this->_scopeConfig->getValue("paypal/general/merchant_country");
         $this->cache = $cache;
         $this->messageManager = $messageManager;
         $this->storeManager = $storeManager;
@@ -44,7 +46,7 @@ class Rest
             'v1/credit/calculated-financing-options',
             \Zend_Http_Client::POST,
             array(
-                'financing_country_code' => 'DE',       //TODO: get the correct country code
+                'financing_country_code' => $this->merchantCountry,       //TODO: is this the correct country code?
                 'transaction_amount' => array(
                     'value' => $amt,
                     'currency_code' => $this->storeManager->getStore()->getCurrentCurrency()->getCode()
@@ -117,6 +119,6 @@ class Rest
     public function getPayPalUrl($endpoint = "")
     {
         return sprintf('https://api.%spaypal.com/%s',
-            !$this->sandboxFlag ? 'sandbox.' : '', ltrim($endpoint, '/'));
+            $this->sandboxFlag ? 'sandbox.' : '', ltrim($endpoint, '/'));
     }
 }
