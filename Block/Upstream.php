@@ -50,11 +50,15 @@ class Upstream extends Template
         return $display;
     }
 
+    /**
+     * @param bool $amount
+     * @return mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function getFinanceInformation($amount = false)
     {
         if($amount === false){
-            /** price error */
-            $amount = 99;
+            throw new \Magento\Framework\Exception\LocalizedException(__("The price information for the paypal installments calculation could not be received."));
         }
         if(!isset($this->financeInformation[$amount])){
             $this->financeInformation[$amount] = $this->rest->getFinanceInfo($amount);
@@ -78,15 +82,6 @@ class Upstream extends Template
         return "hide";
     }
 
-    /*
-    public function getQualifyingFinancingOptionsForPaymentMethod($amount = false)
-    {
-        if($this->_scopeConfig->getValue("payment/iways_paypalinstalments_section/iways_paypalinstalments/specific_upstream_payment_method")){
-            return $this->getQualifyingFinancingOptions(150);
-        }
-        return "hide";
-    }*/
-
     public function getQualifyingFinancingOptions($amount = false)
     {
         $financeInformation = $this->getFinanceInformation($amount);
@@ -96,15 +91,16 @@ class Upstream extends Template
         return false;
     }
 
-    public function translateInterval($interval, $checkGrammar)
+    public function translateInterval($intervalString)
     {
-        if($interval == "MONTHS"){
-            if($checkGrammar){
-                return "monatlichen";
-            }else{
-                return "monatliche";
-            }
-        }
+        $interval = [
+            "MONTHS" => "monatliche",
+            "DAYS" => "tägliche",
+            "WEEKS" => "wöchentliche",
+            "YEARS" => "jährliche"
+        ];
+
+        return $interval[$intervalString];
     }
 
     public function getItemPrice($withCurrencyCode)

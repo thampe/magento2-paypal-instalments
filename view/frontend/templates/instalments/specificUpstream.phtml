@@ -1,7 +1,5 @@
 <?php
-$location = $block->getSiteLocation();
-
-if($location == "catalog_product_view"){
+if($block->getSiteLocation() == "catalog_product_view"){
     $financeInformation = $block->getFinanceInformationForCurrentProduct();
     $netLoanAmount = $block->getItemPrice(true);
     $nonCalculatedMessage = __("Sie können diesen Artikel auch finanzieren!");
@@ -15,10 +13,10 @@ if($financeInformation != "hide"):
     if($financeInformation):
         if($block->isSpecific()): ?>
             <div class="specific-pp-installment">
-                <p class="installment-head"><?= __('Finanzierung ab %1 in %2 %3 Raten mit Ratenzahlung Powered by PayPal',
+                <p class="installment-head"><?= __('Finanzierung ab %1 in %2 %3n Raten mit Ratenzahlung Powered by PayPal',
                         $block->formatPrice($financeInformation[0]->monthly_payment->value),
                         $financeInformation[0]->credit_financing->term,
-                        $block->translateInterval($financeInformation[0]->credit_financing->interval, true))?></p>
+                        $block->translateInterval($financeInformation[0]->credit_financing->interval))?></p>
                 <span class="small-font"><?= __("Repräsentatives Beispiel gem. § 6a PAngV:") ?></span>
                 <table class="small-font">
                     <tr>
@@ -39,7 +37,7 @@ if($financeInformation != "hide"):
                     </tr>
                     <tr>
                         <td><?= __('%1 %2 Raten in Höhe von je:', $financeInformation[0]->credit_financing->term,
-                                $block->translateInterval($financeInformation[0]->credit_financing->interval, false)) ?></td>
+                                $block->translateInterval($financeInformation[0]->credit_financing->interval)) ?></td>
                         <td><?= $block->formatPrice($financeInformation[0]->monthly_payment->value) ?></td>
                     </tr>
                 </table>
@@ -64,7 +62,7 @@ if($financeInformation != "hide"):
                     <div class="paypal-option option-col-<?= count($financeInformation) ?>">
                         <div class="paypal-option-content">
                             <p class="big-font"><strong><?= __("Plan") . " " . ($key + 1) ?><?php if($key==0){echo " *";} ?></strong></p>
-                            <p><?= __("%1 %2 Raten in Höhe von je", $financeOption->credit_financing->term, $block->translateInterval($financeOption->credit_financing->interval, true))?></p>
+                            <p><?= __("%1 %2 Raten in Höhe von je", $financeOption->credit_financing->term, $block->translateInterval($financeOption->credit_financing->interval))?></p>
                             <table>
                                 <tr>
                                     <td><p></p></td>

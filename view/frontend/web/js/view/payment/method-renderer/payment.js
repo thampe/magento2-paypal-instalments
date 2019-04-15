@@ -115,9 +115,7 @@ define(
 
                         $.each(financeInformation, function (index, financeOption) {
                             var star = "";
-                            if(index === 0){
-                                star = "*"
-                            }
+                            if(index === 0) star = "*";
                             html +=
                                 '<div class="paypal-option option-col-' + financeInformation.length + '">' +
                                     '<div class="paypal-option-content">' +
