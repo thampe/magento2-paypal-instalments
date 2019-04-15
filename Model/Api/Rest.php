@@ -46,7 +46,7 @@ class Rest
             'v1/credit/calculated-financing-options',
             \Zend_Http_Client::POST,
             array(
-                'financing_country_code' => $this->merchantCountry,       //TODO: is this the correct country code?
+                'financing_country_code' => $this->merchantCountry,
                 'transaction_amount' => array(
                     'value' => $amt,
                     'currency_code' => $this->storeManager->getStore()->getCurrentCurrency()->getCode()

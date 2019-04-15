@@ -78,14 +78,14 @@ class Upstream extends Template
         return "hide";
     }
 
+    /*
     public function getQualifyingFinancingOptionsForPaymentMethod($amount = false)
     {
         if($this->_scopeConfig->getValue("payment/iways_paypalinstalments_section/iways_paypalinstalments/specific_upstream_payment_method")){
-            /** TODO: get checkout amount */
             return $this->getQualifyingFinancingOptions(150);
         }
         return "hide";
-    }
+    }*/
 
     public function getQualifyingFinancingOptions($amount = false)
     {
@@ -107,7 +107,6 @@ class Upstream extends Template
         }
     }
 
-    /** TODO: using final price of product, not sure if that is the correct way */
     public function getItemPrice($withCurrencyCode)
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -143,5 +142,15 @@ class Upstream extends Template
     public function isSpecific()
     {
         return $this->_scopeConfig->getValue("payment/iways_paypalinstalments_section/iways_paypalinstalments/specific_upstream_calculated");
+    }
+
+    public function getCurrencyCode()
+    {
+        return $this->_storeManager->getStore()->getCurrentCurrency()->getCode();
+    }
+
+    public function getPPImageUrl()
+    {
+        return $this->getViewFileUrl('Iways_PayPalInstalments::images/pp_installments.jpg');
     }
 }

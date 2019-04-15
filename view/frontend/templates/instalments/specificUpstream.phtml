@@ -4,9 +4,11 @@ $location = $block->getSiteLocation();
 if($location == "catalog_product_view"){
     $financeInformation = $block->getFinanceInformationForCurrentProduct();
     $netLoanAmount = $block->getItemPrice(true);
-}elseif($location == "checkout_cart_index"){
+    $nonCalculatedMessage = __("Sie können diesen Artikel auch finanzieren!");
+}else{
     $financeInformation = $block->getFinanceInformationForCart();
     $netLoanAmount = $block->formatPrice($block->getCartTotal());
+    $nonCalculatedMessage = __("Sie können diesen Wahrenkorb auch finanzieren!");
 }
 
 if($financeInformation != "hide"):
@@ -52,7 +54,7 @@ if($financeInformation != "hide"):
         <?php endif; ?>
         <div id="pp-installments-overlay" style="display: none;">
             <a onclick="hidePPOverlay()" id="close-button">x</a>
-            <img class="paypal-installments-image" src="<?php echo $this->getViewFileUrl('Iways_PayPalInstalments::images/pp_installments.jpg'); ?>" alt="paypal-icon">
+            <img class="paypal-installments-image" src="<?= $block->getPPImageUrl() ?>" alt="paypal-icon">
             <p class="bigger-font"><?= __("Zahlen Sie bequem und einfach in monatlichen Raten") ?></p>
             <p><?= __("Ihre Ratenzahlung und den passenden Finanzierungsplan können Sie im Rahmen des Bestellprozesses auswählen.
             Ihr Antrag erfolgt komplett online und wird in wenigen Schritten hier im Shop abgeschlossen.") ?></p>

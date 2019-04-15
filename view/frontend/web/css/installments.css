@@ -26,6 +26,10 @@
     background: #fff;
 }
 
+.specific-pp-installment.checkout-version{
+    margin: 0 0 30px;
+}
+
 .specific-pp-installment.align-center{
     text-align: center;
 }
@@ -115,7 +119,7 @@
 }
 
 #pp-installments-overlay .paypal-options-wrapper .paypal-option{
-    float: left;
+    display: inline-block;
     text-align: center;
 }
 
@@ -131,15 +135,15 @@
 }
 
 #pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-2{
-    width: 50%;
+    width: 240px;
 }
 
 #pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-3{
-    width: 33%;
+    width: 32.5%;
 }
 
 #pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-4{
-    width: 25%;
+    width: 24.6%;
 }
 
 #pp-installments-overlay .paypal-options-wrapper .paypal-option .paypal-option-content{
@@ -168,11 +172,11 @@
 @media (max-width: 949px) {
     #pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-4,
     #pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-3{
-        width: 50%;
+        width: 49%;
     }
 }
 
-@media (max-width: 550px) {
+@media (max-width: 685px) {
     #pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-4,
     #pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-3,
     #pp-installments-overlay .paypal-options-wrapper .paypal-option.option-col-2{

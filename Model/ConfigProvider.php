@@ -56,9 +56,12 @@ class ConfigProvider implements ConfigProviderInterface
             'payment' => [
                 'iways_paypalinstalments_payment' => [
                     'redirectUrl' => $this->method->getCheckoutRedirectUrl(),
-                    'upstreamData' => $this->upstream->getQualifyingFinancingOptionsForPaymentMethod(),
+                    'upstreamData' => $this->upstream->getFinanceInformationForCart(),
+                    'cartAmount' => $this->upstream->getCartTotal(),
                     'isSpecific' => $this->upstream->isSpecific(),
-                    'lender' => $this->upstream->getLender()
+                    'lender' => $this->upstream->getLender(),
+                    'currencyCode' => $this->upstream->getCurrencyCode(),
+                    'ppImageUrl' => $this->upstream->getPPImageUrl()
                 ]
             ],
         ] : [];
