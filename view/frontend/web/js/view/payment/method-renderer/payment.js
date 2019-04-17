@@ -173,7 +173,7 @@ define(
                             '</div>'
                     }
                 }
-                $('#addhereguys').append(html);
+                $('#paypal-installment-hook').append(html);
             }
         });
     }
