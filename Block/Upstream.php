@@ -94,10 +94,10 @@ class Upstream extends Template
     public function translateInterval($intervalString)
     {
         $interval = [
-            "MONTHS" => "monatliche",
-            "DAYS" => "tägliche",
-            "WEEKS" => "wöchentliche",
-            "YEARS" => "jährliche"
+            "MONTHS" => __("monthly"),
+            "DAYS" => __("daily"),
+            "WEEKS" => __("weekly"),
+            "YEARS" => __("yearly")
         ];
 
         return $interval[$intervalString];

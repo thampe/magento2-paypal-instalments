@@ -37,7 +37,7 @@ class ConfigProvider implements ConfigProviderInterface
     /**
      * ConfigProvider constructor.
      * @param PaymentHelper $paymentHelper
-     * @param Upstream upstream
+     * @param Upstream $upstream
      */
     public function __construct(
         PaymentHelper $paymentHelper,
