@@ -44,9 +44,13 @@
                 <strong class="box-title"><span><?= $block->escapeHtml(__('Payment Method')) ?></span></strong>
                 <div class="box-content">
                     <?= $block->escapeHtml($block->getPaymentMethodTitle()) ?><br>
-                    <?= $block->escapeHtml($block->getEmail()) ?> <br>
-                    <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/pp-acceptance-medium.png"
-                         alt="<?= $block->escapeHtml(__('Buy now with PayPal')) ?>"/>
+                        <?= __('Term: %1', $block->getInstalmentInfo('term')) ?><br>
+                        <?= __('Monthly payment: %1',
+                                $block->formatPrice($block->getInstalmentInfo('monthly_payment'))) ?><br>
+                        <?= __('Fee amount: %1',
+                                $block->formatPrice($block->getInstalmentInfo('fee_amt'))); ?><br>
+                        <?= __('Total cost: %1',
+                                $block->formatPrice($block->getInstalmentInfo('total_cost'))); ?><br>
                 </div>
                 <?php if ($block->getEditUrl()): ?>
                     <div class="box-actions">
@@ -107,4 +111,10 @@
         }
     }
 
+
 </script>
+<style>
+    tr.grand.totals {
+        border-bottom: 2px solid black;
+    }
+</style>

@@ -22,7 +22,7 @@ namespace Iways\PayPalInstalments\Model;
  * Iways PayPalInstalments Model Instalments
  *
  * @category   Iways
- * @package    Iways_PaypalInstalments
+ * @package    Iways_PayPalInstalments
  * @author robert
  */
 class Pro extends \Magento\Paypal\Model\Pro

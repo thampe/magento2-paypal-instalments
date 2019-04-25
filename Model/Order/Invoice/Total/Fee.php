@@ -18,6 +18,8 @@ class Fee extends \Magento\Sales\Model\Order\Invoice\Total\AbstractTotal
 
         $invoice->setInstalmentsFee($order->getInstalmentsFee());
         $invoice->setBaseInstalmentsFee($order->getBaseInstalmentsFee());
-
+        $invoice->setInstalmentsFeeTotal($order->getInstalmentsFeeTotal());
+        $invoice->setBaseInstalmentsFeeTotal($order->getBaseInstalmentsFeeTotal());
+        return $this;
     }
 }

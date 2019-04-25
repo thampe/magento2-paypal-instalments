@@ -24,4 +24,19 @@ class Review extends \Magento\Paypal\Block\Express\Review
      * @var string
      */
     protected $_controllerPath = 'instalments/instalments';
+
+    /**
+     * Wrapper for getting instalments infos from payment additional information
+     *
+     * @return string
+     */
+    public function getInstalmentInfo($key)
+    {
+        return $this->_quote->getPayment()->getAdditionalInformation('instalments_' . $key);
+    }
+
+    public function formatPrice($price)
+    {
+        return $this->_formatPrice($price);
+    }
 }
