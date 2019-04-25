@@ -24,7 +24,7 @@ use Iways\PayPalInstalments\Model\Cart;
  * Iways PayPalInstalments Model Api Nvp
  *
  * @category   Iways
- * @package    Iways_PaypalInstalments
+ * @package    Iways_PayPalInstalments
  * @author robert
  */
 class Nvp extends \Magento\Paypal\Model\Api\Nvp

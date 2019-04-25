@@ -12,7 +12,7 @@ namespace Iways\PayPalInstalments\Model\Quote\Address\Total;
 class FeeTotal extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
 {
 
-    protected $_code = 'instalments_fee_amt';
+    protected $_code = 'instalments_fee_amt_total';
 
     /**
      * @param \Magento\Quote\Model\Quote $quote
@@ -47,7 +47,7 @@ class FeeTotal extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
         if ($amount != 0) {
             $result = [
                 'code' => $this->getCode(),
-                'title' => __('Instalments Fee Total'),
+                'title' => __('Grand Total (incl. Fee)'),
                 'value' => $amount,
                 'base_value' => $total->getBaseInstalmentsFeeAmtTotalAmount(),
                 'area' => 'footer'
