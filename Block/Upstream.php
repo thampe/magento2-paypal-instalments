@@ -35,6 +35,9 @@ class Upstream extends Template
 
     public function getGenericConfig()
     {
+        if(!$this->isEnabled()){
+            return false;
+        }
         $display = false;
         $view = $this->getSiteLocation();
         $data = $this->_scopeConfig->getValue("payment/iways_paypalinstalments_section/iways_paypalinstalments");
@@ -48,6 +51,11 @@ class Upstream extends Template
             }
         }
         return $display;
+    }
+
+    public function isEnabled()
+    {
+        return $this->_scopeConfig->getValue("payment/paypal_express/active");
     }
 
     /**
