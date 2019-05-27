@@ -191,6 +191,7 @@ class Nvp extends \Magento\Paypal\Model\Api\Nvp
         }
         $request['USERSELECTEDFUNDINGSOURCE'] = 'Finance';
         $request['LANDINGPAGE'] = 'Billing';
+        $request['LOCALECODE'] = 'DE';
 
         $response = $this->call(self::SET_EXPRESS_CHECKOUT, $request);
         $this->_importFromResponse($this->_setExpressCheckoutResponse, $response);

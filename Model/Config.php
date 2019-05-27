@@ -37,7 +37,7 @@ class Config extends \Magento\Paypal\Model\Config
     /**
      * PayPal Instalments BN Code
      */
-    const BN_CODE = 'Magento_Cart_Installments_DE';
+    const BN_CODE = 'Magento2_Cart_Installments';
 
     /**
      * Config path for enabling/disabling order review step in express checkout
