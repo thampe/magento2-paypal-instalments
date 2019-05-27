@@ -11,6 +11,7 @@
                class="radio"
                data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()" />
         <label data-bind="attr: {'for': getCode()}" class="label">
+            <img class="payment-icon" data-bind="attr: {src: getPaymentAcceptanceMarkSrc(), alt: $t('PayPal icon')}">
             <span data-bind="text: getTitle()"></span>
         </label>
     </div>
@@ -35,7 +36,7 @@
                         type="submit"
                         data-bind="click: continueToPayPal, enable: (getCode() == isChecked())"
                         disabled>
-                    <span data-bind="i18n: 'Continue to PayPal'"></span>
+                    <span data-bind="i18n: 'Apply for Installments'"></span>
                 </button>
             </div>
         </div>

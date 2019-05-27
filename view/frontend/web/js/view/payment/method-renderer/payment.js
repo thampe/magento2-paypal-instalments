@@ -45,6 +45,10 @@ define(
                     return false;
                 }
             },
+            /** Returns payment acceptance mark image path */
+            getPaymentAcceptanceMarkSrc: function () {
+                return window.checkoutConfig.payment.paypalExpress.paymentAcceptanceMarkSrc;
+            },
             getInstallmentData: function () {
                 var financeInformation = window.checkoutConfig.payment.iways_paypalinstalments_payment.upstreamData,
                     lender = window.checkoutConfig.payment.iways_paypalinstalments_payment.lender,
