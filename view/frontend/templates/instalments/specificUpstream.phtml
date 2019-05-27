@@ -9,6 +9,13 @@ if($block->getSiteLocation() == "catalog_product_view"){
     $nonCalculatedMessage = __("You can also finance this cart!");
 }
 
+if (count($financeInformation) > 1){
+    if(count($financeInformation) == 4){
+        array_splice($financeInformation, 0, 0, array_splice($financeInformation, 3, 1));
+    }
+    $financeInformation = array_reverse($financeInformation);
+}
+
 if($block->isEnabled()):
     if($financeInformation != "hide"):
         if($financeInformation):

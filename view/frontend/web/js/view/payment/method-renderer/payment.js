@@ -46,16 +46,24 @@ define(
                 }
             },
             getInstallmentData: function () {
-                var financeInformation = window.checkoutConfig.payment.iways_paypalinstalments_payment.upstreamData;
-                var lender = window.checkoutConfig.payment.iways_paypalinstalments_payment.lender;
-                var cartAmount = window.checkoutConfig.payment.iways_paypalinstalments_payment.cartAmount;
-                var translateInterval = {
+                var financeInformation = window.checkoutConfig.payment.iways_paypalinstalments_payment.upstreamData,
+                    lender = window.checkoutConfig.payment.iways_paypalinstalments_payment.lender,
+                    cartAmount = window.checkoutConfig.payment.iways_paypalinstalments_payment.cartAmount,
+                    html = "",
+                    translateInterval = {
                     "MONTHS": $.mage.__("monthly"),
                     "DAYS": $.mage.__("daily"),
                     "WEEKS": $.mage.__("weekly"),
                     "YEARS": $.mage.__("yearly")
                 };
-                var html = "";
+
+                if(financeInformation.length > 1){
+                    if(financeInformation.length === 4){
+                        financeInformation.splice(0, 0, financeInformation.splice(3, 1)[0]);
+                    }
+                    financeInformation = financeInformation.reverse();
+                }
+
                 if(financeInformation !== "hide"){
                     if(financeInformation){
                         if(window.checkoutConfig.payment.iways_paypalinstalments_payment.isSpecific == 1){
