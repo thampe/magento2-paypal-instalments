@@ -55,15 +55,15 @@ define(
                     cartAmount = window.checkoutConfig.payment.iways_paypalinstalments_payment.cartAmount,
                     html = "",
                     translateInterval = {
-                    "MONTHS": $.mage.__("monthly"),
-                    "DAYS": $.mage.__("daily"),
-                    "WEEKS": $.mage.__("weekly"),
-                    "YEARS": $.mage.__("yearly")
-                };
+                        "MONTHS": $.mage.__("monthly"),
+                        "DAYS": $.mage.__("daily"),
+                        "WEEKS": $.mage.__("weekly"),
+                        "YEARS": $.mage.__("yearly")
+                    };
 
-                if(financeInformation.length > 1){
+                if(Array.isArray(financeInformation) && financeInformation.length > 1){
                     if(financeInformation.length === 4){
-                        financeInformation.splice(0, 0, financeInformation.splice(3, 1)[0]);
+                        financeInformation.push(financeInformation.splice(0, 1)[0]);
                     }
                     financeInformation = financeInformation.reverse();
                 }
